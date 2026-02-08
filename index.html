@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>प्रोफेशनल APK डाउनलोड पेज</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; overflow-y: auto; overflow-x: hidden; }
+        body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #2c3e50, #3498db); color: #ecf0f1; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; min-height: 100vh; padding: 20px; transform-style: preserve-3d; perspective: 1200px; position: relative; }
+        
+        /* --- लोडर के लिए CSS --- */
+        #loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #2c3e50;
+            display: flex;
+            flex-direction: column; 
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(236, 240, 241, 0.3);
+            border-top-color: #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        .loader-text {
+            color: #ecf0f1;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        /* --- बदलाव यहाँ है: अंग्रेजी टेक्स्ट के लिए नया CSS --- */
+        .loader-subtext {
+            color: rgba(236, 240, 241, 0.8);
+            font-size: 1rem;
+            margin-top: 20px; /* पहिए और इस टेक्स्ट के बीच में जगह */
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        /* --- लोडर CSS समाप्त --- */
+
+        .card { 
+            background: rgba(44, 62, 80, 0.85); 
+            backdrop-filter: blur(10px); 
+            border-radius: 25px; 
+            padding: 2.5rem 2rem; 
+            width: 100%; 
+            max-width: 750px; 
+            text-align: center; 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); 
+            transform-style: preserve-3d; 
+            transition: transform 0.6s ease-in-out, opacity 0.5s ease-in-out;
+            position: relative; 
+            z-index: 1; 
+            margin-top: 20px; 
+            margin-bottom: 20px;
+            visibility: hidden; 
+            opacity: 0;
+        }
+        .card.visible {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .card:hover { transform: rotateY(5deg) rotateX(2deg) scale(1.01); }
+        #displayCoverPhotoContainer { width: calc(100% + 80px); margin-left: -40px; margin-right: -40px; height: 120px; border-radius: 15px; overflow: hidden; transform: translateZ(10px); box-shadow: 0 10px 20px rgba(0,0,0,0.4); margin-bottom: 2rem; background-color: rgba(0,0,0,0.3); position: relative; clip-path: polygon(-5% 0%, 105% 0%, 95% 100%, 5% 100%); }
+        #displayCoverPhoto { width: 100%; height: 100%; object-fit: cover; display: block; }
+        #displayAppLogo { width: 150px; height: 150px; margin: -75px auto 1.8rem; background-color: rgba(44, 62, 80, 0.9); border-radius: 35px; border: 3px solid rgba(255,255,255,0.5); box-shadow: 0 5px 15px rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; overflow: hidden; transform: translateZ(30px); position: relative; z-index: 3; }
+        #displayAppLogo svg { width: 70px; height: 70px; fill: #ecf0f1; }
+        #displayAppLogo img { width: 100%; height: 100%; object-fit: cover; }
+        #displayAppName { font-size: 2.8rem; margin-bottom: 1.5rem; font-weight: 700; text-shadow: 0 4px 8px rgba(0,0,0,0.5); transform: translateZ(20px); }
+        #earningBanner { background: linear-gradient(90deg, #f0932b, #eb4d4b); color: #fff; font-weight: 700; font-size: 1.2rem; padding: 10px 20px; border-radius: 10px; display: inline-block; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); transform: translateZ(25px); text-transform: uppercase; letter-spacing: 1px; animation: pulse-banner 3s infinite ease-in-out; }
+        @keyframes pulse-banner { 0% { transform: translateZ(25px) scale(1); opacity: 1; } 50% { transform: translateZ(30px) scale(1.02); opacity: 0.9; } 100% { transform: translateZ(25px) scale(1); opacity: 1; } }
+        .action-buttons-container { display: flex; justify-content: center; gap: 15px; margin-top: 1.5rem; margin-bottom: 2.5rem; transform: translateZ(15px); }
+        .action-btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 20px; border-radius: 50px; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(5px); color: #fff; text-decoration: none; font-size: 1rem; font-weight: 600; border: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.3); animation: zoom-and-jiggle 2.5s infinite ease-in-out; }
+        .action-btn:hover { animation-play-state: paused; background: rgba(0, 0, 0, 0.7); transform: translateY(-2px) scale(1.05); box-shadow: 0 6px 15px rgba(0,0,0,0.4); }
+        .action-btn svg { width: 18px; height: 18px; fill: #fff; }
+        @keyframes zoom-and-jiggle { 0%, 100% { transform: scale(1) rotate(0); } 25% { transform: scale(1.03) rotate(-2deg); } 50% { transform: scale(0.97) rotate(0deg); } 75% { transform: scale(1.03) rotate(2deg); } }
+        #displayScreenshots { display: flex; overflow-x: auto; gap: 20px; padding: 15px; border-radius: 15px; background-color: rgba(0, 0, 0, 0.2); box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.4); -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; justify-content: flex-start; transform: translateZ(12px); }
+        #displayScreenshots::-webkit-scrollbar { height: 10px; }
+        #displayScreenshots::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); border-radius: 10px; }
+        #displayScreenshots::-webkit-scrollbar-thumb { background-color: #3498db; border-radius: 10px; border: 3px solid rgba(44, 62, 80, 0.85); }
+        #displayScreenshots img { flex-shrink: 0; width: 150px; height: 260px; object-fit: cover; border-radius: 12px; border: 2px solid rgba(255, 255, 255, 0.25); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); transform: translateZ(8px); transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out; scroll-snap-align: center; }
+        #displayScreenshots img:hover { transform: translateZ(15px) scale(1.05); box-shadow: 0 12px 25px rgba(0, 0, 0, 0.6); }
+        .btn { display: inline-block; width: 100%; padding: 18px 35px; border-radius: 60px; text-decoration: none; color: #fff; font-weight: 600; font-size: 1.25rem; cursor: pointer; transition: all 0.3s ease; border: none; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); transform-style: preserve-3d; transform: translateZ(25px); margin-top: 2.5rem; }
+        .download-btn { background: linear-gradient(135deg, #2980b9, #3498db); text-align: center; animation: pulse-zoom 2s infinite alternate; }
+        .download-btn:hover { animation-play-state: paused; transform: translateZ(30px) scale(1.04); box-shadow: 0 15px 25px rgba(52, 152, 219, 0.5); }
+        @keyframes pulse-zoom { 0% { transform: translateZ(25px) scale(1); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); } 50% { transform: translateZ(30px) scale(1.03); box-shadow: 0 15px 25px rgba(52, 152, 219, 0.5); } 100% { transform: translateZ(25px) scale(1); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); } }
+        .download-btn.clicked { animation: button-press 0.2s ease-out forwards; }
+        @keyframes button-press { 0% { transform: translateZ(25px) scale(1); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); } 50% { transform: translateZ(15px) scale(0.95); box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3); } 100% { transform: translateZ(25px) scale(1); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); } }
+        #displayAppDescription { font-size: 1.15rem; color: #e0e0e0; margin-top: 2.5rem; line-height: 1.8; text-align: justify; transform: translateZ(12px); background: linear-gradient(45deg, rgba(52, 152, 219, 0.2), rgba(44, 62, 80, 0.4)); padding: 25px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <!-- बदलाव यहाँ है: लोडर के लिए HTML -->
+    <div id="loader-overlay">
+        <p class="loader-text">डाउनलोड APK पेज लोड हो रहा है...</p>
+        <div class="spinner"></div>
+        <p class="loader-subtext">Loading Please Wait...</p>
+    </div>
+
+    <div class="card" id="displayPageSection">
+        <div id="displayCoverPhotoContainer">
+            <img id="displayCoverPhoto" class="hidden" alt="कवर फोटो">
+        </div>
+        <div id="displayAppLogo">
+            <svg id="defaultAppLogoSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,20H5V4H19M19,2H5A2,2 0 0,0 3,4V20A2,2 0 0,0 5,22H19A2,2 0 0,0 21,20V4A2,2 0 0,0 19,2M13,18H11V16H13M8.5,13.5L7,12L10,9L13,12L11.5,13.5L10,12M17,12L15.5,13.5L14,12L17,9L20,12L18.5,13.5L17,12Z" /></svg>
+            <img id="displayAppLogoImg" class="hidden" alt="ऐप लोगो">
+        </div>
+        
+        <h1 id="displayAppName"></h1>
+        
+        <div id="earningBanner">बेस्ट अर्निंग ऐप</div>
+
+        <div class="action-buttons-container">
+            <a href="#" id="actionDownloadBtn" class="action-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/></svg>
+                <span>डाउनलोड</span>
+            </a>
+            <a href="#" id="actionShareBtn" class="action-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18,16.08C17.24,16.08 16.56,16.38 16.04,16.85L8.91,12.7C8.96,12.47 9,12.24 9,12C9,11.76 8.96,11.53 8.91,11.3L16.04,7.15C16.56,7.62 17.24,7.92 18,7.92C19.66,7.92 21,6.58 21,5C21,3.42 19.66,2 18,2C16.34,2 15,3.42 15,5C15,5.24 15.04,5.47 15.09,5.7L7.96,9.85C7.44,9.38 6.76,9.08 6,9.08C4.34,9.08 3,10.42 3,12C3,13.58 4.34,14.92 6,14.92C6.76,14.92 7.44,14.62 7.96,14.15L15.09,18.3C15.04,18.53 15,18.76 15,19C15,20.58 16.34,21.92 18,21.92C19.66,21.92 21,20.58 21,19C21,17.42 19.66,16.08 18,16.08Z"/></svg>
+                <span>शेयर</span>
+            </a>
+        </div>
+
+        <div id="displayScreenshots"></div>
+        <a id="downloadLink" class="btn download-btn hidden">अभी डाउनलोड करें</a>
+        <p id="displayAppDescription"></p>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyDaQYrSIrUZ-x1gSih4elgdHeCgh9Oh22A",
+          authDomain: "cashback-cfa2e.firebaseapp.com",
+          databaseURL: "https://cashback-cfa2e-default-rtdb.firebaseio.com",
+          projectId: "cashback-cfa2e",
+          storageBucket: "cashback-cfa2e.firebasestorage.app",
+          messagingSenderId: "610591869528",
+          appId: "1:610591869528:web:a4267a4add6c577a85582d"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        let screenshotInterval;
+        const slideDuration = 3000;
+
+        function showContent() {
+            const loader = document.getElementById('loader-overlay');
+            const card = document.getElementById('displayPageSection');
+            
+            loader.style.opacity = '0';
+            card.classList.add('visible');
+
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 500); 
+        }
+
+        function populatePage(details) {
+            if (!details || !details.appName) {
+                document.getElementById('displayAppName').textContent = 'कोई ऐप उपलब्ध नहीं है';
+                document.getElementById('displayPageSection').innerHTML += '<p style="margin-top: 20px;">एडमिन पैनल से जानकारी अपलोड करें।</p>';
+                showContent();
+                return;
+            }
+
+            document.title = details.appName + " - डाउनलोड करें";
+            document.getElementById('displayAppName').textContent = details.appName;
+            document.getElementById('displayAppDescription').textContent = details.description;
+
+            if (details.coverPhotoUrl) {
+                const coverImg = document.getElementById('displayCoverPhoto');
+                coverImg.src = details.coverPhotoUrl;
+                coverImg.classList.remove('hidden');
+            }
+
+            if (details.logoUrl) {
+                const logoImg = document.getElementById('displayAppLogoImg');
+                logoImg.src = details.logoUrl;
+                logoImg.classList.remove('hidden');
+                document.getElementById('defaultAppLogoSvg').classList.add('hidden');
+            } else {
+                 document.getElementById('defaultAppLogoSvg').classList.remove('hidden');
+            }
+
+            const screenshotsContainer = document.getElementById('displayScreenshots');
+            screenshotsContainer.innerHTML = '';
+            if (details.screenshots && Array.isArray(details.screenshots) && details.screenshots.length > 0) {
+                details.screenshots.forEach(ssUrl => {
+                    const img = document.createElement('img');
+                    img.src = ssUrl;
+                    img.alt = "ऐप स्क्रीनशॉट";
+                    screenshotsContainer.appendChild(img);
+                });
+            }
+
+            const downloadLink = document.getElementById('downloadLink');
+            const actionDownloadBtn = document.getElementById('actionDownloadBtn');
+            if (details.apkUrl) {
+                downloadLink.href = details.apkUrl;
+                downloadLink.download = details.apkFileName || 'app.apk';
+                downloadLink.classList.remove('hidden');
+
+                actionDownloadBtn.href = details.apkUrl;
+                actionDownloadBtn.download = details.apkFileName || 'app.apk';
+            } else {
+                downloadLink.classList.add('hidden');
+                actionDownloadBtn.classList.add('hidden');
+            }
+
+            startScreenshotSlideshow();
+            
+            showContent();
+        }
+        
+        function fetchDataFromFirebase() {
+            const dataRef = database.ref('adminState/apkPageDetails'); 
+            
+            dataRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                populatePage(data);
+            }, (error) => {
+                console.error("Firebase read failed: " + error.name);
+                populatePage(null);
+            });
+        }
+
+        const actionShareBtn = document.getElementById('actionShareBtn');
+        actionShareBtn.addEventListener('click', async (event) => {
+            event.preventDefault();
+            const appName = document.getElementById('displayAppName').textContent;
+            const shareData = {
+                title: appName,
+                text: `यह शानदार ऐप देखें: ${appName}`,
+                url: window.location.href,
+            };
+            if (navigator.share) {
+                try {
+                    await navigator.share(shareData);
+                } catch (err) {
+                    console.error('शेयर करने में त्रुटि:', err);
+                }
+            } else {
+                alert('आपका ब्राउज़र शेयर सुविधा का समर्थन नहीं करता है। कृपया लिंक को मैन्युअल रूप से कॉपी करें।');
+            }
+        });
+
+        let currentSlideIndex = 0;
+        function startScreenshotSlideshow() {
+            const displayScreenshots = document.getElementById('displayScreenshots');
+            stopScreenshotSlideshow();
+            const screenshots = displayScreenshots.querySelectorAll('img');
+            if (screenshots.length <= 1) return;
+
+            currentSlideIndex = 0;
+            screenshots[currentSlideIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            screenshotInterval = setInterval(() => {
+                currentSlideIndex = (currentSlideIndex + 1) % screenshots.length;
+                screenshots[currentSlideIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }, slideDuration);
+            displayScreenshots.addEventListener('mouseenter', stopScreenshotSlideshow);
+            displayScreenshots.addEventListener('mouseleave', startScreenshotSlideshow);
+        }
+
+        function stopScreenshotSlideshow() {
+            const displayScreenshots = document.getElementById('displayScreenshots');
+            clearInterval(screenshotInterval);
+            displayScreenshots.removeEventListener('mouseenter', stopScreenshotSlideshow);
+            displayScreenshots.removeEventListener('mouseleave', startScreenshotSlideshow);
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchDataFromFirebase);
+    </script>
+</body>
+</html>
